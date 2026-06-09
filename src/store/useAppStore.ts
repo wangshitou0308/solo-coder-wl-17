@@ -224,14 +224,15 @@ export const useAppStore = create<AppState>()(
         const { tools, materials } = get();
         const normalized = (s?: string) =>
           (s ?? '').trim().toLowerCase();
+        const fuzzyMatch = (a: string, b: string) => {
+          const na = normalized(a);
+          const nb = normalized(b);
+          return na === nb || na.includes(nb) || nb.includes(na);
+        };
 
         const toolMissing: { name: string; spec?: string }[] = [];
         for (const reqTool of requiredTools) {
-          const found = tools.some(
-            (t) =>
-              normalized(t.name) === normalized(reqTool.name) &&
-              (!reqTool.spec || normalized(t.brand) === normalized(reqTool.spec))
-          );
+          const found = tools.some((t) => fuzzyMatch(t.name, reqTool.name));
           if (!found) {
             toolMissing.push({ name: reqTool.name, spec: reqTool.spec });
           }
@@ -252,10 +253,8 @@ export const useAppStore = create<AppState>()(
         }[] = [];
 
         for (const reqMat of requiredMaterials) {
-          const matched = materials.find(
-            (m) =>
-              normalized(m.name) === normalized(reqMat.name) &&
-              normalized(m.spec) === normalized(reqMat.spec)
+          const matched = materials.find((m) =>
+            fuzzyMatch(m.name, reqMat.name)
           );
 
           if (!matched) {

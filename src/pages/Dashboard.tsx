@@ -308,7 +308,7 @@ export default function Dashboard() {
                 return (
                   <Link
                     key={log.id}
-                    to="/logs"
+                    to={`/logs/${log.id}`}
                     className="group flex items-center gap-5 px-6 py-4 hover:bg-slate-50 transition-colors"
                   >
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center text-2xl shrink-0 border border-slate-200 group-hover:border-indigo-200 transition-colors">

@@ -91,11 +91,25 @@ export default function LogEditor() {
   const handlePhotoUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-    Array.from(files).forEach((file) => {
+    const maxPhotos = 9;
+    const remaining = maxPhotos - photos.length;
+    if (remaining <= 0) {
+      alert(`最多只能上传 ${maxPhotos} 张照片`);
+      e.target.value = '';
+      return;
+    }
+    const fileArray = Array.from(files).slice(0, remaining);
+    if (files.length > remaining) {
+      alert(`本次已选择 ${files.length} 张，只能添加前 ${remaining} 张（达到上限 ${maxPhotos} 张）`);
+    }
+    fileArray.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (ev) => {
         const result = ev.target?.result as string;
-        setPhotos((prev) => [...prev, result]);
+        setPhotos((prev) => {
+          if (prev.length >= maxPhotos) return prev;
+          return [...prev, result].slice(0, maxPhotos);
+        });
       };
       reader.readAsDataURL(file);
     });

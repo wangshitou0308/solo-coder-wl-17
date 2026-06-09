@@ -9,7 +9,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 45,
     costSave: 150,
     icon: '🚰',
-    emoji: '🔧',
     keywords: ['水龙头', '更换', '漏水', '厨房', '卫生间'],
     description: '更换老旧或漏水的水龙头，包括拆卸旧龙头、安装新龙头、密封防漏等步骤。',
     tools: [
@@ -41,7 +40,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 30,
     costSave: 100,
     icon: '🪠',
-    emoji: '🧽',
     keywords: ['下水道', '堵塞', '疏通', '马桶吸', '管道通'],
     description: '使用物理和化学方法疏通厨房或卫生间下水道堵塞。',
     tools: [
@@ -74,7 +72,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 20,
     costSave: 80,
     icon: '🚿',
-    emoji: '💦',
     keywords: ['花洒', '淋浴', '喷头', '软管', '更换'],
     description: '更换老化或堵塞的淋浴花洒头和软管。',
     tools: [
@@ -104,7 +101,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 60,
     costSave: 200,
     icon: '🚽',
-    emoji: '💧',
     keywords: ['马桶', '水箱', '漏水', '进水阀', '排水阀'],
     description: '排查并修复马桶水箱内部漏水问题，包括更换进水阀、排水阀或密封件。',
     tools: [
@@ -136,7 +132,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 120,
     costSave: 300,
     icon: '🗑️',
-    emoji: '⚙️',
     keywords: ['垃圾处理器', '厨余', '水槽', '安装', '电器'],
     description: '在厨房水槽下方安装厨余垃圾处理器，含电路和下水连接。',
     tools: [
@@ -170,7 +165,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 40,
     costSave: 120,
     icon: '🔧',
-    emoji: '💧',
     keywords: ['角阀', '水阀', '更换', '三角阀', '漏水'],
     description: '更换生锈或漏水的冷热三角阀。',
     tools: [
@@ -202,7 +196,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 90,
     costSave: 250,
     icon: '🔩',
-    emoji: '🌊',
     keywords: ['水管', '漏水', '接头', 'PPR', '补漏'],
     description: '修复PPR或金属水管接头处的漏水问题。',
     tools: [
@@ -236,7 +229,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 25,
     costSave: 80,
     icon: '🔌',
-    emoji: '⚡',
     keywords: ['插座', '面板', '更换', '五孔', '开关'],
     description: '更换老旧或损坏的墙壁插座/开关面板。',
     tools: [
@@ -268,7 +260,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 50,
     costSave: 150,
     icon: '💡',
-    emoji: '✨',
     keywords: ['吸顶灯', 'LED', '灯具', '安装', '照明'],
     description: '在天花板安装或更换LED吸顶灯。',
     tools: [
@@ -302,7 +293,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 60,
     costSave: 200,
     icon: '⚡',
-    emoji: '🔌',
     keywords: ['空开', '断路器', '配电箱', '跳闸', '更换'],
     description: '更换跳闸或损坏的家用配电箱空气开关。',
     tools: [
@@ -334,7 +324,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 45,
     costSave: 180,
     icon: '📱',
-    emoji: '🔧',
     keywords: ['智能开关', 'WiFi', '单火', '零火', '米家'],
     description: '将普通墙壁开关更换为WiFi智能开关，实现手机远程控制。',
     tools: [
@@ -367,7 +356,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 90,
     costSave: 300,
     icon: '🏮',
-    emoji: '✨',
     keywords: ['吊灯', '水晶灯', '灯具', '吊装', '接线'],
     description: '在客厅或餐厅安装较重的装饰吊灯。',
     tools: [
@@ -401,7 +389,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 15,
     costSave: 50,
     icon: '🔧',
-    emoji: '⚡',
     keywords: ['插座', '松动', '暗盒', '螺丝', '修复'],
     description: '修复墙壁插座面板松动、暗盒耳朵损坏问题。',
     tools: [
@@ -428,7 +415,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 180,
     costSave: 500,
     icon: '🛡️',
-    emoji: '⚡',
     keywords: ['地线', '接地', '老房', '安全', '改造'],
     description: '老旧住宅无地线情况下加装简易接地系统。',
     tools: [
@@ -461,7 +447,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 120,
     costSave: 200,
     icon: '🗄️',
-    emoji: '🔨',
     keywords: ['组装', '衣柜', '鞋柜', '板式', '三合一'],
     description: '按照组装说明书安装宜家或网购板式衣柜、鞋柜等家具。',
     tools: [
@@ -494,7 +479,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 40,
     costSave: 100,
     icon: '🚪',
-    emoji: '🎨',
     keywords: ['木门', '划痕', '补漆', '修复', '美容'],
     description: '修复实木门或复合门表面的划痕、磕碰、掉漆损伤。',
     tools: [
@@ -528,7 +512,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 75,
     costSave: 180,
     icon: '🚪',
-    emoji: '🔩',
     keywords: ['合页', '铰链', '木门', '开槽', '安装'],
     description: '在木门和门框上开槽安装不锈钢合页，调整门缝。',
     tools: [
@@ -561,7 +544,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 240,
     costSave: 400,
     icon: '📚',
-    emoji: '🪵',
     keywords: ['书架', '定制', '实木', '生态板', 'DIY'],
     description: '用生态板或实木板设计制作壁挂或落地简易书架。',
     tools: [
@@ -595,7 +577,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 45,
     costSave: 120,
     icon: '🔐',
-    emoji: '🔑',
     keywords: ['门锁', '执手锁', '更换', '锁体', '锁芯'],
     description: '更换卧室或卫生间门锁，含锁体、锁芯、面板全套。',
     tools: [
@@ -627,7 +608,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 480,
     costSave: 1000,
     icon: '🪵',
-    emoji: '🔨',
     keywords: ['木地板', '复合地板', '铺设', '安装', '踢脚线'],
     description: '采用悬浮铺设法安装强化复合或实木多层地板。',
     tools: [
@@ -662,7 +642,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 30,
     costSave: 60,
     icon: '🪑',
-    emoji: '🔧',
     keywords: ['桌椅', '松动', '加固', '木楔', '胶水'],
     description: '加固松动的实木餐桌椅榫卯结构。',
     tools: [
@@ -694,7 +673,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 40,
     costSave: 100,
     icon: '🪟',
-    emoji: '🔩',
     keywords: ['窗帘杆', '罗马杆', '安装', '打孔', '轨道'],
     description: '在窗户上方安装罗马杆或轨道式窗帘杆。',
     tools: [
@@ -728,7 +706,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 30,
     costSave: 60,
     icon: '🗂️',
-    emoji: '🔧',
     keywords: ['置物架', '层架', '收纳', '铁架', '组装'],
     description: '安装厨房或卫生间金属置物层架。',
     tools: [
@@ -759,7 +736,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 20,
     costSave: 70,
     icon: '🚪',
-    emoji: '🔑',
     keywords: ['门把手', '执手', '更换', '五金', '门锁'],
     description: '更换损坏或松动的门执手/门把手。',
     tools: [
@@ -790,7 +766,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 30,
     costSave: 80,
     icon: '🛁',
-    emoji: '🔩',
     keywords: ['毛巾架', '卫浴', '挂件', '打孔', '免钉'],
     description: '在卫生间墙面安装毛巾杆、浴巾架等五金挂件。',
     tools: [
@@ -822,7 +797,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 40,
     costSave: 100,
     icon: '🗄️',
-    emoji: '🔧',
     keywords: ['滑轨', '抽屉', '导轨', '三节轨', '更换'],
     description: '更换损坏或卡涩的三节抽屉滑轨。',
     tools: [
@@ -852,7 +826,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 20,
     costSave: 50,
     icon: '🔗',
-    emoji: '🔒',
     keywords: ['防盗链', '门链', '安全', '入户', '五金'],
     description: '在入户门内侧安装防盗安全链。',
     tools: [
@@ -879,7 +852,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 50,
     costSave: 150,
     icon: '🚪',
-    emoji: '🔧',
     keywords: ['推拉门', '滑轮', '滚轮', '衣柜门', '阳台门'],
     description: '更换推拉门/衣柜移门底部或顶部滑轮。',
     tools: [
@@ -910,7 +882,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 20,
     costSave: 80,
     icon: '❄️',
-    emoji: '🌬️',
     keywords: ['空调', '滤网', '清洗', '挂机', '柜机'],
     description: '拆卸清洗家用挂式/立式空调室内机过滤网。',
     tools: [
@@ -941,7 +912,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 120,
     costSave: 100,
     icon: '🧺',
-    emoji: '🧼',
     keywords: ['洗衣机', '内筒', '清洁', '除垢', '槽洗剂'],
     description: '使用专用清洁剂深度清洁滚筒/波轮洗衣机内外筒夹层。',
     tools: [
@@ -972,7 +942,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 90,
     costSave: 60,
     icon: '🧊',
-    emoji: '🧹',
     keywords: ['冰箱', '除霜', '清洁', '去味', '冷藏室'],
     description: '直冷冰箱除霜、深度清洁、消毒去异味。',
     tools: [
@@ -1005,7 +974,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 75,
     costSave: 200,
     icon: '🚿',
-    emoji: '⚙️',
     keywords: ['热水器', '镁棒', '除垢', '排污', '储水式'],
     description: '更换储水式电热水器阳极镁棒，清洁内胆水垢。',
     tools: [
@@ -1037,7 +1005,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 90,
     costSave: 150,
     icon: '🍳',
-    emoji: '🧴',
     keywords: ['油烟机', '清洗', '油杯', '叶轮', '除油'],
     description: '深度拆解清洗侧吸/顶吸式抽油烟机叶轮和油网。',
     tools: [
@@ -1070,7 +1037,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 25,
     costSave: 40,
     icon: '📟',
-    emoji: '🍽️',
     keywords: ['微波炉', '清洁', '油污', '蒸汽', '消毒'],
     description: '使用蒸汽法深度清洁微波炉内油污和焦糊渍。',
     tools: [
@@ -1101,7 +1067,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 60,
     costSave: 180,
     icon: '🔥',
-    emoji: '🔧',
     keywords: ['燃气灶', '点火针', '维修', '脉冲', '不打火'],
     description: '更换嵌入式/台式燃气灶陶瓷点火针，修复不打火问题。',
     tools: [
@@ -1133,7 +1098,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 180,
     costSave: 500,
     icon: '🧱',
-    emoji: '🎨',
     keywords: ['美缝', '瓷砖', '填缝', '瓷缝剂', '施工'],
     description: '卫生间或厨房瓷砖缝隙使用美缝剂防霉防黑施工。',
     tools: [
@@ -1167,7 +1131,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 150,
     costSave: 300,
     icon: '🖌️',
-    emoji: '🏠',
     keywords: ['墙面', '补漆', '修补', '腻子', '乳胶漆'],
     description: '修复墙面开裂、起鼓、掉皮、污渍并局部刷漆。',
     tools: [
@@ -1201,7 +1164,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 30,
     costSave: 50,
     icon: '🪟',
-    emoji: '✨',
     keywords: ['玻璃', '水垢', '清洁', '淋浴房', '水渍'],
     description: '去除淋浴房玻璃水垢和顽固水渍，恢复透明透亮。',
     tools: [
@@ -1234,7 +1196,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 35,
     costSave: 30,
     icon: '🚰',
-    emoji: '💧',
     keywords: ['水龙头', '水垢', '除垢', '起泡器', '电镀'],
     description: '清除龙头表面和起泡器内的白色水垢，恢复光亮。',
     tools: [
@@ -1267,7 +1228,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 60,
     costSave: 200,
     icon: '🛁',
-    emoji: '💎',
     keywords: ['大理石', '台面', '抛光', '结晶', '打蜡'],
     description: '家用大理石/石英石台面去划痕抛光，恢复光泽。',
     tools: [
@@ -1299,7 +1259,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 40,
     costSave: 80,
     icon: '🪟',
-    emoji: '🧵',
     keywords: ['纱窗', '纱网', '更换', '防蚊', '铝合金'],
     description: '更换推拉纱窗或平开纱窗的老旧破损纱网。',
     tools: [
@@ -1331,7 +1290,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 25,
     costSave: 60,
     icon: '🌬️',
-    emoji: '🌿',
     keywords: ['除臭', '返味', '地漏', '下水道', '防臭'],
     description: '处理卫生间和厨房地漏、面盆返味问题。',
     tools: [
@@ -1362,7 +1320,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 60,
     costSave: 100,
     icon: '👕',
-    emoji: '🧵',
     keywords: ['织补', '补洞', '衣物', '针织', '手缝'],
     description: '手工无痕织补针织衫、牛仔、羊毛衫的破洞。',
     tools: [
@@ -1394,7 +1351,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 90,
     costSave: 150,
     icon: '🪟',
-    emoji: '✂️',
     keywords: ['窗帘', '改短', '卷边', '缝边', '改尺寸'],
     description: '修改窗帘长度宽度，手工或缝纫机缝制新折边。',
     tools: [
@@ -1427,7 +1383,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 300,
     costSave: 600,
     icon: '🛋️',
-    emoji: '🧵',
     keywords: ['沙发套', '罩子', '定制', '缝纫', '量体裁剪'],
     description: '量体裁剪布料，缝制可拆洗的布艺沙发套罩。',
     tools: [
@@ -1461,7 +1416,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 120,
     costSave: 150,
     icon: '🛏️',
-    emoji: '✂️',
     keywords: ['床单', '被罩', '改尺寸', '床上用品', '四件套'],
     description: '将大床四件套改为小床规格，或旧被套改尺寸。',
     tools: [
@@ -1493,7 +1447,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 40,
     costSave: 180,
     icon: '🧥',
-    emoji: '🪡',
     keywords: ['羽绒服', '破洞', '补丁', '布贴', '防钻绒'],
     description: '修复羽绒服表层划破、烟头烫伤，防止钻绒。',
     tools: [
@@ -1525,7 +1478,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 50,
     costSave: 80,
     icon: '👖',
-    emoji: '🪡',
     keywords: ['牛仔裤', '拉链', '更换', 'YKK', '门襟'],
     description: '更换牛仔裤或裤子门襟损坏的拉链。',
     tools: [
@@ -1557,7 +1509,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 40,
     costSave: 60,
     icon: '🚲',
-    emoji: '🔧',
     keywords: ['补胎', '内胎', '漏气', '自行车', '冷补'],
     description: '使用冷补胶片修补自行车内胎漏气点。',
     tools: [
@@ -1589,7 +1540,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 30,
     costSave: 80,
     icon: '🛑',
-    emoji: '🚲',
     keywords: ['刹车', '刹车皮', '闸皮', 'V刹', 'C刹'],
     description: '更换V刹/C刹自行车的刹车皮块，调整刹车行程。',
     tools: [
@@ -1619,7 +1569,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 30,
     costSave: 50,
     icon: '⛓️',
-    emoji: '🚲',
     keywords: ['链条', '清洁', '上油', '养护', '飞轮'],
     description: '深度清洁自行车链条飞轮，上链条油润滑保养。',
     tools: [
@@ -1651,7 +1600,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 60,
     costSave: 150,
     icon: '⚙️',
-    emoji: '🚲',
     keywords: ['变速器', '后拨', '前拨', '变速', '调限位'],
     description: '调整山地车/公路车前后拨链器定位螺丝和变速线张力。',
     tools: [
@@ -1681,7 +1629,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 20,
     costSave: 40,
     icon: '🚲',
-    emoji: '🔧',
     keywords: ['把套', '车把', '握把', '更换', '防滑'],
     description: '更换老化或破损的自行车握把套。',
     tools: [
@@ -1712,7 +1659,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 20,
     costSave: 100,
     icon: '🪑',
-    emoji: '🚲',
     keywords: ['坐垫', '座包', '更换', '座管', '高度'],
     description: '更换舒适坐垫，调整坐垫高度前后倾角。',
     tools: [
@@ -1743,7 +1689,6 @@ export const SCENES: RepairScene[] = [
     estimatedTime: 180,
     costSave: 250,
     icon: '🛞',
-    emoji: '🚲',
     keywords: ['调圈', '辐条', '轮组', '校正', '偏摆'],
     description: '校正轮组左右偏摆、径向跳动，调整辐条张力均匀。',
     tools: [

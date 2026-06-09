@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Plus, Calendar, Clock, ImageIcon } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { formatDate, formatMinutes } from '@/lib/utils';
@@ -7,6 +7,7 @@ import { SCENES } from '@/data/scenes';
 
 export default function Logs() {
   const logs = useAppStore((s) => s.logs);
+  const navigate = useNavigate();
 
   const groupedLogs = useMemo(() => {
     const groups: Record<string, typeof logs> = {};
@@ -99,9 +100,10 @@ export default function Logs() {
 
                 <div className="flex-1 space-y-4">
                   {dayLogs.map((log) => (
-                    <div
+                    <Link
                       key={log.id}
-                      className="group bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-xl hover:shadow-slate-200/60 hover:border-indigo-200 transition-all duration-300"
+                      to={`/logs/${log.id}`}
+                      className="group bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-xl hover:shadow-slate-200/60 hover:border-indigo-200 transition-all duration-300 block"
                     >
                       <div className="flex gap-5">
                         <div className="shrink-0">
@@ -175,7 +177,7 @@ export default function Logs() {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
