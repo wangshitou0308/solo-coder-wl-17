@@ -11,6 +11,7 @@ import {
   Hammer,
   GraduationCap,
   FileText,
+  ShoppingCart,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -26,6 +27,7 @@ const navItems: NavItem[] = [
   { to: '/skills', label: '我的技能', icon: GraduationCap },
   { to: '/tools', label: '工具库存', icon: Wrench },
   { to: '/materials', label: '耗材库存', icon: Package },
+  { to: '/shopping', label: '采购清单', icon: ShoppingCart },
   { to: '/logs', label: '维修日志', icon: FileText },
   { to: '/stats', label: '月度统计', icon: BarChart3 },
 ];

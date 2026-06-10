@@ -326,13 +326,7 @@ export default function Statistics() {
   }, [monthLogs]);
 
   const inventoryAlerts = useMemo(() => {
-    const missingTools = tools.length === 0
-      ? [
-          { name: '活动扳手', spec: '10寸' },
-          { name: '螺丝刀套装', spec: '十字一字' },
-          { name: '测电笔', spec: '感应式' },
-        ]
-      : [];
+    const missingTools: { name: string; spec?: string }[] = [];
 
     const lowMaterials = materials
       .filter((m) => m.quantity <= m.threshold)
@@ -343,14 +337,6 @@ export default function Statistics() {
         threshold: m.threshold,
         unit: m.unit,
       }));
-
-    if (lowMaterials.length === 0) {
-      lowMaterials.push(
-        { name: '生料带', spec: '', available: 0, threshold: 3, unit: '卷' },
-        { name: '绝缘胶带', spec: 'PVC', available: 1, threshold: 5, unit: '卷' },
-        { name: '自攻螺丝', spec: 'M4*30mm', available: 5, threshold: 20, unit: '颗' }
-      );
-    }
 
     return { missingTools, lowMaterials };
   }, [tools, materials]);

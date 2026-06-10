@@ -10,6 +10,7 @@ import Logs from '@/pages/Logs';
 import LogEditor from '@/pages/LogEditor';
 import LogDetail from '@/pages/LogDetail';
 import Statistics from '@/pages/Statistics';
+import ShoppingList from '@/pages/ShoppingList';
 
 export default function App() {
   return (
@@ -24,7 +25,9 @@ export default function App() {
           <Route path="/materials" element={<Materials />} />
           <Route path="/logs" element={<Logs />} />
           <Route path="/logs/new" element={<LogEditor />} />
+          <Route path="/logs/:id/edit" element={<LogEditor />} />
           <Route path="/logs/:id" element={<LogDetail />} />
+          <Route path="/shopping" element={<ShoppingList />} />
           <Route path="/stats" element={<Statistics />} />
         </Route>
       </Routes>

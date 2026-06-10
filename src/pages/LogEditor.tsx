@@ -1,5 +1,5 @@
-import { useState, useRef, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, ChangeEvent, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   Save,
@@ -27,7 +27,14 @@ const ALL_TOOLS = Array.from(
 
 export default function LogEditor() {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const addLog = useAppStore((s) => s.addLog);
+  const updateLog = useAppStore((s) => s.updateLog);
+  const consumeMaterials = useAppStore((s) => s.consumeMaterials);
+  const logs = useAppStore((s) => s.logs);
+
+  const isEditMode = !!id;
+  const editingLog = logs.find((l) => l.id === id);
 
   const [sceneName, setSceneName] = useState('');
   const [sceneDropdownOpen, setSceneDropdownOpen] = useState(false);
@@ -45,6 +52,26 @@ export default function LogEditor() {
   const [costSave, setCostSave] = useState<number | ''>('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditMode && editingLog) {
+      const isCustom = !SCENES.some((s) => s.name === editingLog.sceneName);
+      if (isCustom) {
+        setUseCustomScene(true);
+        setCustomScene(editingLog.sceneName);
+      } else {
+        setSceneName(editingLog.sceneName);
+      }
+      setDate(editingLog.date);
+      setDuration(editingLog.duration);
+      setSelectedTools(editingLog.toolsUsed);
+      setMaterials(editingLog.materialsUsed.length > 0 ? [...editingLog.materialsUsed] : []);
+      setProblems(editingLog.problems || '');
+      setTips(editingLog.tips || '');
+      setPhotos(editingLog.photos);
+      setCostSave(editingLog.costSave ?? '');
+    }
+  }, [isEditMode, editingLog]);
 
   const sceneOptions = SCENES.map((s) => ({ name: s.name, icon: s.icon, costSave: s.costSave }));
 
@@ -136,19 +163,38 @@ export default function LogEditor() {
     }
 
     const matchedScene = SCENES.find((s) => s.name === finalSceneName);
-
-    addLog({
+    const materialsUsed = materials.filter((m) => m.name.trim() && m.amount > 0);
+    const logData = {
       sceneId: matchedScene?.id,
       sceneName: finalSceneName,
       date,
       duration: Number(duration),
       toolsUsed: selectedTools,
-      materialsUsed: materials.filter((m) => m.name.trim() && m.amount > 0),
+      materialsUsed,
       problems: problems.trim() || undefined,
       tips: tips.trim() || undefined,
       photos,
       costSave: costSave !== '' ? Number(costSave) : matchedScene?.costSave,
-    });
+    };
+
+    if (!isEditMode && materialsUsed.length > 0) {
+      const result = consumeMaterials(materialsUsed);
+      if (!result.success) {
+        const shortageMsg = result.shortages
+          .map((s) => `${s.name}（需要${s.needed}，库存${s.available}）`)
+          .join('、');
+        const confirmMsg = `以下耗材库存不足：\n${shortageMsg}\n\n是否仍要保存日志？（库存将不会被扣减）`;
+        if (!confirm(confirmMsg)) {
+          return;
+        }
+      }
+    }
+
+    if (isEditMode && id) {
+      updateLog(id, logData);
+    } else {
+      addLog(logData);
+    }
 
     navigate('/logs');
   };
@@ -164,8 +210,12 @@ export default function LogEditor() {
             <ArrowLeft className="w-5 h-5 text-slate-600" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">新增维修日志</h1>
-            <p className="text-slate-500 mt-1">记录你的维修过程与心得</p>
+            <h1 className="text-2xl font-bold text-slate-900">
+              {isEditMode ? '编辑维修日志' : '新增维修日志'}
+            </h1>
+            <p className="text-slate-500 mt-1">
+              {isEditMode ? '修改已有的维修记录' : '记录你的维修过程与心得'}
+            </p>
           </div>
         </div>
 
@@ -559,7 +609,7 @@ export default function LogEditor() {
               className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold hover:from-indigo-700 hover:to-violet-700 transition-all shadow-lg shadow-indigo-600/25"
             >
               <Save className="w-5 h-5" />
-              保存日志
+              {isEditMode ? '保存修改' : '保存日志'}
             </button>
           </div>
         </div>

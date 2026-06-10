@@ -45,6 +45,9 @@ interface AppState {
     updates: Partial<Omit<Material, 'id' | 'createdAt'>>
   ) => void;
   removeMaterial: (id: string) => void;
+  consumeMaterials: (
+    usages: { name: string; amount: number }[]
+  ) => { success: boolean; shortages: { name: string; needed: number; available: number }[] };
 
   addSkill: (skill: Omit<SkillRecord, 'learnedAt'>) => void;
   updateSkill: (sceneId: string, updates: Partial<Omit<SkillRecord, 'sceneId' | 'learnedAt'>>) => void;
@@ -54,13 +57,14 @@ interface AppState {
   updateLog: (id: string, updates: Partial<Omit<RepairLog, 'id' | 'createdAt'>>) => void;
   removeLog: (id: string) => void;
 
-  addShoppingItem: (item: Omit<ShoppingItem, 'id' | 'addedAt' | 'purchased'>) => void;
+  addShoppingItem: (item: Omit<ShoppingItem, 'id' | 'addedAt' | 'purchased'>) => boolean;
   updateShoppingItem: (
     id: string,
     updates: Partial<Omit<ShoppingItem, 'id' | 'addedAt'>>
   ) => void;
   removeShoppingItem: (id: string) => void;
   toggleShoppingItemPurchased: (id: string) => void;
+  isShoppingItemDuplicate: (name: string, type: 'tool' | 'material', spec?: string) => boolean;
 
   getCurrentMonthLogStats: () => MonthlyLogStats;
   checkInventory: (
@@ -115,6 +119,46 @@ export const useAppStore = create<AppState>()(
           materials: state.materials.filter((m) => m.id !== id),
         })),
 
+      consumeMaterials: (usages) => {
+        const { materials } = get();
+        const shortages: { name: string; needed: number; available: number }[] = [];
+        const normalized = (s: string) => s.trim().toLowerCase();
+        const fuzzyMatch = (a: string, b: string) => {
+          const na = normalized(a);
+          const nb = normalized(b);
+          return na === nb || na.includes(nb) || nb.includes(na);
+        };
+
+        for (const usage of usages) {
+          const matched = materials.find((m) => fuzzyMatch(m.name, usage.name));
+          if (!matched) {
+            shortages.push({ name: usage.name, needed: usage.amount, available: 0 });
+          } else if (matched.quantity < usage.amount) {
+            shortages.push({
+              name: usage.name,
+              needed: usage.amount,
+              available: matched.quantity,
+            });
+          }
+        }
+
+        if (shortages.length > 0) {
+          return { success: false, shortages };
+        }
+
+        set((state) => ({
+          materials: state.materials.map((m) => {
+            const usage = usages.find((u) => fuzzyMatch(u.name, m.name));
+            if (usage) {
+              return { ...m, quantity: Math.max(0, m.quantity - usage.amount) };
+            }
+            return m;
+          }),
+        }));
+
+        return { success: true, shortages: [] };
+      },
+
       addSkill: (skill) =>
         set((state) => {
           const existing = state.skills.find((s) => s.sceneId === skill.sceneId);
@@ -161,7 +205,22 @@ export const useAppStore = create<AppState>()(
           logs: state.logs.filter((l) => l.id !== id),
         })),
 
-      addShoppingItem: (item) =>
+      isShoppingItemDuplicate: (name, type, spec) => {
+        const { shoppingList } = get();
+        const normalized = (s?: string) => (s ?? '').trim().toLowerCase();
+        return shoppingList.some(
+          (i) =>
+            i.type === type &&
+            normalized(i.name) === normalized(name) &&
+            normalized(i.spec) === normalized(spec)
+        );
+      },
+
+      addShoppingItem: (item) => {
+        const { isShoppingItemDuplicate } = get();
+        if (isShoppingItemDuplicate(item.name, item.type, item.spec)) {
+          return false;
+        }
         set((state) => ({
           shoppingList: [
             ...state.shoppingList,
@@ -172,7 +231,9 @@ export const useAppStore = create<AppState>()(
               purchased: false,
             },
           ],
-        })),
+        }));
+        return true;
+      },
       updateShoppingItem: (id, updates) =>
         set((state) => ({
           shoppingList: state.shoppingList.map((item) =>

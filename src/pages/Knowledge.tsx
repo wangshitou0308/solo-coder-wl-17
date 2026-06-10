@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Clock, ChevronDown } from 'lucide-react';
+import { Search, Clock, ChevronDown, CheckCircle2, GraduationCap } from 'lucide-react';
 import { SCENES } from '@/data/scenes';
 import {
   CATEGORY_LABELS,
@@ -9,6 +9,8 @@ import {
   type Difficulty,
 } from '@/types';
 import { DifficultyBadge } from '@/components/common/DifficultyBadge';
+import { StarRating } from '@/components/common/StarRating';
+import { useAppStore } from '@/store/useAppStore';
 import { cn } from '@/lib/utils';
 
 const ALL_CATEGORIES = 'all' as const;
@@ -35,6 +37,7 @@ const difficultyOptions: { value: DifficultyFilter; label: string }[] = [
 
 export default function Knowledge() {
   const navigate = useNavigate();
+  const skills = useAppStore((s) => s.skills);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>(ALL_CATEGORIES);
@@ -42,6 +45,12 @@ export default function Knowledge() {
     useState<DifficultyFilter>(ALL_DIFFICULTIES);
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [difficultyDropdownOpen, setDifficultyDropdownOpen] = useState(false);
+
+  const skillMap = useMemo(() => {
+    const map = new Map<string, typeof skills[0]>();
+    skills.forEach((s) => map.set(s.sceneId, s));
+    return map;
+  }, [skills]);
 
   const filteredScenes = useMemo(() => {
     return SCENES.filter((scene) => {
@@ -216,48 +225,97 @@ export default function Knowledge() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {filteredScenes.map((scene) => (
-              <button
-                key={scene.id}
-                type="button"
-                onClick={() => navigate(`/knowledge/${scene.id}`)}
-                className="group text-left bg-slate-900/60 backdrop-blur border border-slate-800 rounded-2xl p-5 hover:border-slate-700 hover:shadow-xl hover:shadow-sky-500/5 hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-3xl border border-slate-700 group-hover:scale-105 transition-transform">
-                    {scene.icon}
+            {filteredScenes.map((scene) => {
+              const skill = skillMap.get(scene.id);
+              const isLearned = !!skill;
+              return (
+                <button
+                  key={scene.id}
+                  type="button"
+                  onClick={() => navigate(`/knowledge/${scene.id}`)}
+                  className={cn(
+                    'group relative text-left bg-slate-900/60 backdrop-blur border rounded-2xl p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300',
+                    isLearned
+                      ? 'border-emerald-500/30 hover:border-emerald-500/50 hover:shadow-emerald-500/5'
+                      : 'border-slate-800 hover:border-slate-700 hover:shadow-sky-500/5'
+                  )}
+                >
+                  {isLearned && (
+                    <div className="absolute top-3 right-3">
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span className="text-[10px] font-medium text-emerald-400">已掌握</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-start justify-between mb-4">
+                    <div
+                      className={cn(
+                        'w-14 h-14 rounded-xl bg-gradient-to-br flex items-center justify-center text-3xl border group-hover:scale-105 transition-transform',
+                        isLearned
+                          ? 'from-emerald-900/50 to-slate-900 border-emerald-700/50'
+                          : 'from-slate-800 to-slate-900 border-slate-700'
+                      )}
+                    >
+                      {scene.icon}
+                    </div>
+                    <DifficultyBadge
+                      difficulty={scene.difficulty}
+                      size="sm"
+                      showDots={false}
+                    />
                   </div>
-                  <DifficultyBadge
-                    difficulty={scene.difficulty}
-                    size="sm"
-                    showDots={false}
-                  />
-                </div>
 
-                <h3 className="text-lg font-semibold text-slate-100 mb-2 group-hover:text-sky-400 transition-colors line-clamp-1">
-                  {scene.name}
-                </h3>
+                  <h3
+                    className={cn(
+                      'text-lg font-semibold mb-2 transition-colors line-clamp-1',
+                      isLearned
+                        ? 'text-emerald-300 group-hover:text-emerald-400'
+                        : 'text-slate-100 group-hover:text-sky-400'
+                    )}
+                  >
+                    {scene.name}
+                  </h3>
 
-                <div className="flex items-center gap-1.5 text-sm text-slate-400 mb-3">
-                  <Clock className="w-4 h-4" />
-                  <span>约 {scene.estimatedTime} 分钟</span>
-                </div>
+                  <div className="flex items-center gap-1.5 text-sm text-slate-400 mb-3">
+                    <Clock className="w-4 h-4" />
+                    <span>约 {scene.estimatedTime} 分钟</span>
+                  </div>
 
-                <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
-                  {scene.description}
-                </p>
+                  <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed mb-3">
+                    {scene.description}
+                  </p>
 
-                <div className="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between">
-                  <span className="text-xs text-slate-500">
-                    {scene.tools.length} 工具 · {scene.materials.length} 耗材 ·{' '}
-                    {scene.steps.length} 步骤
-                  </span>
-                  <span className="text-sky-400 text-xs font-medium group-hover:translate-x-0.5 transition-transform">
-                    查看详情 →
-                  </span>
-                </div>
-              </button>
-            ))}
+                  {isLearned && skill && (
+                    <div className="flex items-center gap-2 mb-3">
+                      <GraduationCap className="w-3.5 h-3.5 text-emerald-500" />
+                      <StarRating
+                        value={skill.proficiency}
+                        max={5}
+                        size="sm"
+                        readOnly
+                      />
+                    </div>
+                  )}
+
+                  <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+                    <span className="text-xs text-slate-500">
+                      {scene.tools.length} 工具 · {scene.materials.length} 耗材 ·{' '}
+                      {scene.steps.length} 步骤
+                    </span>
+                    <span
+                      className={cn(
+                        'text-xs font-medium group-hover:translate-x-0.5 transition-transform',
+                        isLearned ? 'text-emerald-400' : 'text-sky-400'
+                      )}
+                    >
+                      查看详情 →
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         )}
       </div>

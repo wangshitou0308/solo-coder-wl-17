@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -11,18 +11,28 @@ import {
   Lightbulb,
   ListChecks,
   Box,
+  ShoppingCart,
+  Check,
+  GraduationCap,
+  Edit3,
+  Calendar,
 } from 'lucide-react';
 import { SCENES } from '@/data/scenes';
 import { CATEGORY_COLORS, CATEGORY_LABELS } from '@/types';
-import type { Difficulty, SceneCategory } from '@/types';
+import type { Difficulty, SceneCategory, Proficiency } from '@/types';
 import { StarRating } from '@/components/common/StarRating';
 import { useAppStore } from '@/store/useAppStore';
-import { cn } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 
 export default function KnowledgeDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const checkInventory = useAppStore((s) => s.checkInventory);
+  const addShoppingItem = useAppStore((s) => s.addShoppingItem);
+  const isShoppingItemDuplicate = useAppStore((s) => s.isShoppingItemDuplicate);
+  const addSkill = useAppStore((s) => s.addSkill);
+  const updateSkill = useAppStore((s) => s.updateSkill);
+  const skills = useAppStore((s) => s.skills);
 
   const scene = useMemo(() => SCENES.find((s) => s.id === id), [id]);
 
@@ -60,6 +70,23 @@ export default function KnowledgeDetail() {
   }
 
   const categoryGradient = CATEGORY_COLORS[scene.category as SceneCategory];
+  const [justAdded, setJustAdded] = useState<Set<string>>(new Set());
+
+  const skillRecord = useMemo(() => {
+    if (!id) return null;
+    return skills.find((s) => s.sceneId === id);
+  }, [skills, id]);
+
+  const handleMarkAsLearned = (proficiency: Proficiency = 3) => {
+    if (!id) return;
+    addSkill({ sceneId: id, proficiency });
+  };
+
+  const handleUpdateProficiency = (proficiency: Proficiency) => {
+    if (!id) return;
+    updateSkill(id, { proficiency });
+  };
+
   const missingToolNames = new Set(
     inventoryCheck?.toolMissing.map((t) => t.name) ?? []
   );
@@ -69,6 +96,33 @@ export default function KnowledgeDetail() {
   const missingMatSet = new Set(
     (inventoryCheck?.materialMissing ?? []).map((m) => m.name)
   );
+
+  const handleAddToShopping = (
+    name: string,
+    type: 'tool' | 'material',
+    spec?: string
+  ) => {
+    const key = `${type}-${name}-${spec ?? ''}`;
+    if (isShoppingItemDuplicate(name, type, spec) || justAdded.has(key)) {
+      return;
+    }
+    const success = addShoppingItem({
+      name,
+      type,
+      spec,
+      reason: `${scene?.name ?? '维修场景'}需要`,
+    });
+    if (success) {
+      setJustAdded((prev) => new Set(prev).add(key));
+      setTimeout(() => {
+        setJustAdded((prev) => {
+          const next = new Set(prev);
+          next.delete(key);
+          return next;
+        });
+      }, 2000);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -110,6 +164,62 @@ export default function KnowledgeDetail() {
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-sm">
                 {scene.name}
               </h1>
+
+              {skillRecord ? (
+                <div className="mb-4 inline-flex items-center gap-3 px-4 py-2.5 bg-emerald-500/20 backdrop-blur border border-emerald-400/30 rounded-xl">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500/30 flex items-center justify-center">
+                    <GraduationCap className="w-4 h-4 text-emerald-300" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-emerald-300 font-medium">已掌握</div>
+                    <div className="flex items-center gap-2">
+                      <StarRating
+                        value={skillRecord.proficiency}
+                        max={5}
+                        size="sm"
+                        readOnly
+                      />
+                      <span className="text-xs text-white/70">
+                        <Calendar className="w-3 h-3 inline mr-1" />
+                        {formatDate(skillRecord.learnedAt)}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      const newProficiency = prompt(
+                        '请输入熟练度（1-5）：',
+                        String(skillRecord.proficiency)
+                      );
+                      if (newProficiency) {
+                        const num = Number(newProficiency);
+                        if (num >= 1 && num <= 5) {
+                          handleUpdateProficiency(num as Proficiency);
+                        } else {
+                          alert('请输入1-5之间的数字');
+                        }
+                      }
+                    }}
+                    className="ml-2 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                    title="修改熟练度"
+                  >
+                    <Edit3 className="w-4 h-4 text-white/80" />
+                  </button>
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <button
+                    onClick={() => handleMarkAsLearned(3)}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-emerald-500/30"
+                  >
+                    <GraduationCap className="w-4 h-4" />
+                    标记已掌握
+                  </button>
+                  <p className="text-xs text-white/50 mt-2">
+                    标记后可记录学习日期和熟练度
+                  </p>
+                </div>
+              )}
 
               <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                 <div className="flex items-center gap-2">
@@ -175,6 +285,10 @@ export default function KnowledgeDetail() {
             <ul className="divide-y divide-slate-800">
               {scene.tools.map((tool, idx) => {
                 const isMissing = missingToolNames.has(tool.name);
+                const key = `tool-${tool.name}-${tool.spec ?? ''}`;
+                const added = justAdded.has(key);
+                const isDuplicate = isShoppingItemDuplicate(tool.name, 'tool', tool.spec);
+                const canAdd = isMissing && !added && !isDuplicate;
                 return (
                   <li
                     key={`${tool.name}-${idx}`}
@@ -183,10 +297,10 @@ export default function KnowledgeDetail() {
                     <div className="flex items-center gap-4">
                       <div
                         className={cn(
-                          'w-9 h-9 rounded-lg flex items-center justify-center',
+                          'w-9 h-9 rounded-lg flex items-center justify-center border',
                           isMissing
-                            ? 'bg-rose-500/10 border border-rose-500/30'
-                            : 'bg-emerald-500/10 border border-emerald-500/30'
+                            ? 'bg-rose-500/10 border-rose-500/30'
+                            : 'bg-emerald-500/10 border-emerald-500/30'
                         )}
                       >
                         {isMissing ? (
@@ -206,16 +320,49 @@ export default function KnowledgeDetail() {
                         )}
                       </div>
                     </div>
-                    <span
-                      className={cn(
-                        'text-xs font-semibold px-3 py-1.5 rounded-lg border',
-                        isMissing
-                          ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
-                          : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={cn(
+                          'text-xs font-semibold px-3 py-1.5 rounded-lg border',
+                          isMissing
+                            ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                            : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                        )}
+                      >
+                        {isMissing ? '库存缺失' : '已在库存'}
+                      </span>
+                      {isMissing && (
+                        <button
+                          onClick={() => handleAddToShopping(tool.name, 'tool', tool.spec)}
+                          disabled={added || isDuplicate}
+                          className={cn(
+                            'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border',
+                            added
+                              ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                              : isDuplicate
+                                ? 'bg-slate-700/50 text-slate-500 border-slate-600/50 cursor-not-allowed'
+                                : 'bg-sky-500/10 text-sky-400 border-sky-500/30 hover:bg-sky-500/20 hover:border-sky-400/50'
+                          )}
+                        >
+                          {added ? (
+                            <>
+                              <Check className="w-3.5 h-3.5" />
+                              已加入
+                            </>
+                          ) : isDuplicate ? (
+                            <>
+                              <ShoppingCart className="w-3.5 h-3.5" />
+                              已在清单
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingCart className="w-3.5 h-3.5" />
+                              加入清单
+                            </>
+                          )}
+                        </button>
                       )}
-                    >
-                      {isMissing ? '库存缺失' : '已在库存'}
-                    </span>
+                    </div>
                   </li>
                 );
               })}
@@ -254,6 +401,9 @@ export default function KnowledgeDetail() {
                 const shortage = shortageMatMap.get(mat.name);
                 const isMissing = missingMatSet.has(mat.name);
                 const hasIssue = shortage || isMissing;
+                const key = `material-${mat.name}-${mat.spec ?? ''}`;
+                const added = justAdded.has(key);
+                const isDuplicate = isShoppingItemDuplicate(mat.name, 'material', mat.spec);
 
                 let statusBadge: { text: string; className: string; icon: JSX.Element };
                 if (isMissing) {
@@ -314,14 +464,47 @@ export default function KnowledgeDetail() {
                         </div>
                       </div>
                     </div>
-                    <span
-                      className={cn(
-                        'text-xs font-semibold px-3 py-1.5 rounded-lg border',
-                        statusBadge.className
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={cn(
+                          'text-xs font-semibold px-3 py-1.5 rounded-lg border',
+                          statusBadge.className
+                        )}
+                      >
+                        {statusBadge.text}
+                      </span>
+                      {hasIssue && (
+                        <button
+                          onClick={() => handleAddToShopping(mat.name, 'material', mat.spec)}
+                          disabled={added || isDuplicate}
+                          className={cn(
+                            'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border',
+                            added
+                              ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                              : isDuplicate
+                                ? 'bg-slate-700/50 text-slate-500 border-slate-600/50 cursor-not-allowed'
+                                : 'bg-sky-500/10 text-sky-400 border-sky-500/30 hover:bg-sky-500/20 hover:border-sky-400/50'
+                          )}
+                        >
+                          {added ? (
+                            <>
+                              <Check className="w-3.5 h-3.5" />
+                              已加入
+                            </>
+                          ) : isDuplicate ? (
+                            <>
+                              <ShoppingCart className="w-3.5 h-3.5" />
+                              已在清单
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingCart className="w-3.5 h-3.5" />
+                              加入清单
+                            </>
+                          )}
+                        </button>
                       )}
-                    >
-                      {statusBadge.text}
-                    </span>
+                    </div>
                   </li>
                 );
               })}

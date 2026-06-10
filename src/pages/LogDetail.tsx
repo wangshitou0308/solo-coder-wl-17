@@ -74,7 +74,7 @@ export default function LogDetail() {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => navigate(`/logs/new`)}
+                  onClick={() => navigate(`/logs/${log.id}/edit`)}
                   className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
                   title="编辑"
                 >

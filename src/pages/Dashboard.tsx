@@ -17,6 +17,7 @@ import {
   Award,
   Sparkles,
   X,
+  ShoppingCart,
 } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { SCENES } from '@/data/scenes';
@@ -28,7 +29,7 @@ interface QuickEntry {
   to: string;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  accent: 'indigo' | 'emerald' | 'amber' | 'rose' | 'cyan' | 'violet';
+  accent: 'indigo' | 'emerald' | 'amber' | 'rose' | 'cyan' | 'violet' | 'sky';
   desc: string;
 }
 
@@ -37,8 +38,9 @@ const quickEntries: QuickEntry[] = [
   { to: '/skills', label: '我的技能', icon: GraduationCap, accent: 'emerald', desc: '掌握度与熟练度' },
   { to: '/tools', label: '工具库存', icon: Wrench, accent: 'amber', desc: '工具管理与清单' },
   { to: '/materials', label: '耗材库存', icon: Package, accent: 'rose', desc: '耗材与预警' },
-  { to: '/logs', label: '维修日志', icon: FileText, accent: 'cyan', desc: '维修记录时间线' },
-  { to: '/stats', label: '月度统计', icon: BarChart3, accent: 'violet', desc: '数据与趋势分析' },
+  { to: '/shopping', label: '采购清单', icon: ShoppingCart, accent: 'cyan', desc: '待购物品管理' },
+  { to: '/logs', label: '维修日志', icon: FileText, accent: 'violet', desc: '维修记录时间线' },
+  { to: '/stats', label: '月度统计', icon: BarChart3, accent: 'sky', desc: '数据与趋势分析' },
 ];
 
 const accentStyles: Record<QuickEntry['accent'], { bg: string; icon: string; hover: string }> = {
@@ -48,6 +50,7 @@ const accentStyles: Record<QuickEntry['accent'], { bg: string; icon: string; hov
   rose: { bg: 'bg-rose-50', icon: 'text-rose-600', hover: 'hover:bg-rose-100 hover:border-rose-300' },
   cyan: { bg: 'bg-cyan-50', icon: 'text-cyan-600', hover: 'hover:bg-cyan-100 hover:border-cyan-300' },
   violet: { bg: 'bg-violet-50', icon: 'text-violet-600', hover: 'hover:bg-violet-100 hover:border-violet-300' },
+  sky: { bg: 'bg-sky-50', icon: 'text-sky-600', hover: 'hover:bg-sky-100 hover:border-sky-300' },
 };
 
 export default function Dashboard() {
