@@ -244,12 +244,58 @@ export const useAppStore = create<AppState>()(
         set((state) => ({
           shoppingList: state.shoppingList.filter((item) => item.id !== id),
         })),
-      toggleShoppingItemPurchased: (id) =>
+      toggleShoppingItemPurchased: (id) => {
+        const { shoppingList, tools, materials, addTool, addMaterial, updateMaterial, updateTool } = get();
+        const item = shoppingList.find((i) => i.id === id);
+        if (!item) return;
+
+        const newPurchased = !item.purchased;
+        const normalized = (s?: string) => (s ?? '').trim().toLowerCase();
+        const fuzzyMatch = (a: string, b: string) => {
+          const na = normalized(a);
+          const nb = normalized(b);
+          return na === nb || na.includes(nb) || nb.includes(na);
+        };
+
+        if (newPurchased) {
+          if (item.type === 'tool') {
+            const existingTool = tools.find((t) => fuzzyMatch(t.name, item.name));
+            if (!existingTool) {
+              addTool({
+                name: item.name,
+                category: '其他',
+                location: '待整理',
+                brand: undefined,
+                model: item.spec || undefined,
+                purchaseDate: new Date().toISOString().split('T')[0],
+                note: item.reason || undefined,
+              });
+            }
+          } else if (item.type === 'material') {
+            const existingMat = materials.find((m) => fuzzyMatch(m.name, item.name));
+            if (existingMat) {
+              updateMaterial(existingMat.id, {
+                quantity: existingMat.quantity + (existingMat.threshold > 0 ? existingMat.threshold : 1),
+              });
+            } else {
+              addMaterial({
+                name: item.name,
+                spec: item.spec || '',
+                quantity: 5,
+                unit: '件',
+                threshold: 3,
+                note: item.reason || undefined,
+              });
+            }
+          }
+        }
+
         set((state) => ({
-          shoppingList: state.shoppingList.map((item) =>
-            item.id === id ? { ...item, purchased: !item.purchased } : item
+          shoppingList: state.shoppingList.map((i) =>
+            i.id === id ? { ...i, purchased: newPurchased } : i
           ),
-        })),
+        }));
+      },
 
       getCurrentMonthLogStats: () => {
         const { logs } = get();

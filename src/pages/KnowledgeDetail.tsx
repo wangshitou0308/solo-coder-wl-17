@@ -33,6 +33,9 @@ export default function KnowledgeDetail() {
   const addSkill = useAppStore((s) => s.addSkill);
   const updateSkill = useAppStore((s) => s.updateSkill);
   const skills = useAppStore((s) => s.skills);
+  const tools = useAppStore((s) => s.tools);
+  const materials = useAppStore((s) => s.materials);
+  const shoppingList = useAppStore((s) => s.shoppingList);
 
   const scene = useMemo(() => SCENES.find((s) => s.id === id), [id]);
 
@@ -47,7 +50,23 @@ export default function KnowledgeDetail() {
         unit: m.unit,
       }))
     );
-  }, [scene, checkInventory]);
+  }, [scene, checkInventory, tools, materials]);
+
+  const shoppingKeySet = useMemo(() => {
+    const normalized = (s?: string) => (s ?? '').trim().toLowerCase();
+    const set = new Set<string>();
+    shoppingList.forEach((item) => {
+      const key = `${item.type}-${normalized(item.name)}-${normalized(item.spec)}`;
+      set.add(key);
+    });
+    return set;
+  }, [shoppingList]);
+
+  const isInShoppingList = (name: string, type: 'tool' | 'material', spec?: string) => {
+    const normalized = (s?: string) => (s ?? '').trim().toLowerCase();
+    const key = `${type}-${normalized(name)}-${normalized(spec)}`;
+    return shoppingKeySet.has(key);
+  };
 
   if (!scene) {
     return (
@@ -103,7 +122,7 @@ export default function KnowledgeDetail() {
     spec?: string
   ) => {
     const key = `${type}-${name}-${spec ?? ''}`;
-    if (isShoppingItemDuplicate(name, type, spec) || justAdded.has(key)) {
+    if (isInShoppingList(name, type, spec) || justAdded.has(key)) {
       return;
     }
     const success = addShoppingItem({
@@ -287,7 +306,7 @@ export default function KnowledgeDetail() {
                 const isMissing = missingToolNames.has(tool.name);
                 const key = `tool-${tool.name}-${tool.spec ?? ''}`;
                 const added = justAdded.has(key);
-                const isDuplicate = isShoppingItemDuplicate(tool.name, 'tool', tool.spec);
+                const isDuplicate = isInShoppingList(tool.name, 'tool', tool.spec);
                 const canAdd = isMissing && !added && !isDuplicate;
                 return (
                   <li
@@ -403,7 +422,7 @@ export default function KnowledgeDetail() {
                 const hasIssue = shortage || isMissing;
                 const key = `material-${mat.name}-${mat.spec ?? ''}`;
                 const added = justAdded.has(key);
-                const isDuplicate = isShoppingItemDuplicate(mat.name, 'material', mat.spec);
+                const isDuplicate = isInShoppingList(mat.name, 'material', mat.spec);
 
                 let statusBadge: { text: string; className: string; icon: JSX.Element };
                 if (isMissing) {

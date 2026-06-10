@@ -78,7 +78,7 @@ export default function Logs() {
         </div>
 
         <div className="relative">
-          {groupedLogs.map(([date, dayLogs]) => (
+          {groupedLogs.map(([date, dayLogs], index) => (
             <div key={date} className="relative mb-10 last:mb-0">
               <div className="flex gap-6">
                 <div className="flex flex-col items-center shrink-0 w-28 pt-2">
@@ -93,7 +93,7 @@ export default function Logs() {
                       {formatDate(date).split('/')[0]}年
                     </p>
                   </div>
-                  {groupedLogs.indexOf([date, dayLogs]) !== groupedLogs.length - 1 && (
+                  {index !== groupedLogs.length - 1 && (
                     <div className="flex-1 w-0.5 bg-gradient-to-b from-indigo-200 to-transparent mt-4 min-h-[60px]" />
                   )}
                 </div>
